@@ -1,102 +1,78 @@
-import { useState } from "react";
-import { generatePassphrase } from "@/utilities";
-import { useFormik } from "formik";
-
-interface PassphraseFormValues {
-  uppercase: boolean;
-  numbers: boolean;
-  special: boolean;
-  numberOfWords: number;
-  personalizePassphrase: boolean;
-  description: string;
-}
-
-const defaultFormValues: PassphraseFormValues = {
-  uppercase: false,
-  numbers: false,
-  special: false,
-  numberOfWords: 4,
-  personalizePassphrase: false,
-  description: ""
-};
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Button,
+  Container,
+} from "@mui/material";
+import { SignupDialog } from "./modules";
 
 const App = () => {
-  const [passphrase, setPassphrase] = useState<string>("");
-
-  const formik = useFormik({
-    initialValues: defaultFormValues,
-    onSubmit: async (values) => {
-      const options: PassphraseFormValues = {
-        ...values,
-      };
-      const passphrase: string = await generatePassphrase(options);
-      setPassphrase(passphrase);
-    },
-  });
-
   return (
-    <div>
-      <h1>Passphrase generator</h1>
-      <form onSubmit={formik.handleSubmit}>
-        <div className="">
-          <label htmlFor="uppercase">Needs uppercase letters</label>
-          <input
-            type="checkbox"
-            checked={formik.values.uppercase}
-            onChange={formik.handleChange}
-            name="uppercase"
-          />
-        </div>
-        <div className="">
-          <label htmlFor="numbers">Needs numbers</label>
-          <input
-            type="checkbox"
-            checked={formik.values.numbers}
-            onChange={formik.handleChange}
-            name="numbers"
-          />
-        </div>
-        <div className="">
-          <label htmlFor="special">Needs special characters</label>
-          <input
-            type="checkbox"
-            checked={formik.values.special}
-            onChange={formik.handleChange}
-            name="special"
-          />
-        </div>
-        <div className="">
-          <label htmlFor="numberOfWords">Number of words</label>
-          <input
-            type="number"
-            value={formik.values.numberOfWords}
-            onChange={formik.handleChange}
-            name="numberOfWords"
-          />
-        </div>
-        <div className="">
-          <label htmlFor="personalizePassphrase">Personalize your passphrase</label>
-          <input
-            type="checkbox"
-            checked={formik.values.personalizePassphrase}
-            onChange={formik.handleChange}
-            name="personalizePassphrase"
-          />
-        </div>
-        <div className="">
-          <label htmlFor="description">Describe yourself</label>
-          <textarea
-            value={formik.values.description}
-            onChange={formik.handleChange}
-            name="description"
-          />
-        </div>
-        <button type="submit">Generate Passphrase</button>
-      </form>
-      <div className="">
-        <h2>{passphrase}</h2>
-      </div>
-    </div>
+    <>
+      <AppBar
+        position="sticky"
+        sx={{ top: 0, bgcolor: "#fcfcfc" }}
+        elevation={0}
+      >
+        <Container>
+          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+              <Typography
+                variant="h6"
+                component="div"
+                color="primary"
+                sx={{ flexGrow: 1, fontWeight: 700 }}
+              >
+                simple<span style={{ fontWeight: 400 }}>words</span>
+              </Typography>
+            </Box>
+            <Box display={"flex"} gap={2}>
+              <Button variant="outlined" sx={{ borderRadius: 5 }}>
+                Log in
+              </Button>
+              <SignupDialog buttonText="Get Started"/>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <Box>
+        <Container sx={{ display: "flex", alignItems: "center", minHeight: "70vh" }}>
+          <Box
+            flex={1}
+            sx={{ p: 1 }}
+            display="flex"
+            flexDirection="column"
+            gap={2}
+          >
+            <Box>
+              <Typography variant="h3" sx={{ fontWeight: 700 }}>
+                Hello world
+              </Typography>
+              <Typography variant="h5">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit.{" "}
+              </Typography>
+            </Box>
+            <SignupDialog buttonText="Try it out" />
+          </Box>
+          <Box flex={1} sx={{ p: 1 }}>
+            <img
+              src="/homepage-hero-2.avif"
+              alt=""
+              style={{ maxWidth: "100%" }}
+            />
+          </Box>
+        </Container>
+      </Box>
+      <Box>
+        <Container>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>Security As A Service</Typography>
+          </Box>
+        </Container>
+      </Box>
+    </>
   );
 };
 

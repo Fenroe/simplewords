@@ -50,15 +50,21 @@ export const generatePassphrase = async (options: any) => {
       const word: string = selectRandomWord(wordList);
 
       // Add the word to the passphraseWords array
-      passphraseWords.push(uppercase === true ? word.toUpperCase() : word);
+      passphraseWords.push(word);
 
       // Update the remaining passphrase length
       remainingPassphraseLength -= word.length;
     }
   }
 
-  // Join words into a passphrase, using "#" as a separator if special is true
-  let passphrase: string = passphraseWords.join(special === true ? "#" : " ");
+  if (uppercase === true) {
+    passphraseWords = passphraseWords.map(
+      (word) => `${word[0].toUpperCase()}${word.slice(1)}`
+    );
+  }
+
+  // Join words into a passphrase, using "-" as a separator if special is true
+  let passphrase: string = passphraseWords.join(special === true ? "-" : " ");
 
   // Add numbers to the passphrase if numbers is true
   if (numbers === true) {
