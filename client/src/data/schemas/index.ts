@@ -1,4 +1,2 @@
-import { loginValidationSchema } from "./loginValidationSchema";
-import { signupValidationSchema } from "./signupValidationSchema";
-
-export { loginValidationSchema, signupValidationSchema };
+export { loginValidationSchema } from "./loginValidationSchema";
+export { signupValidationSchema } from "./signupValidationSchema";

@@ -1,3 +1,1 @@
-import { AuthButton } from "./AuthButton";
-
-export { AuthButton }
+export { SWButton } from "./SWButton";

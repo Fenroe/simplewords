@@ -1,3 +1,1 @@
-import { SignupDialog } from "./SignupDialog";
-
-export { SignupDialog }
+export { LoginDialog } from "./LoginDialog";
