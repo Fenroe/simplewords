@@ -1,41 +1,11 @@
-import { AppBar, Toolbar, Typography, Box, Container } from "@mui/material";
-import { LoginDialog } from "@/modules";
+import { Typography, Box, Container } from "@mui/material";
+import { Header } from "@/modules";
 import { SWButton } from "@/components";
-import { useNavigate } from "react-router";
 
 export const Landing = () => {
-  const navigate = useNavigate();
-
-  const handleSignup = () => {
-    navigate("/signup");
-  }
-
   return (
-    <>
-      <AppBar
-        position="sticky"
-        sx={{ top: 0, bgcolor: "#fcfcfc" }}
-        elevation={0}
-      >
-        <Container>
-          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-              <Typography
-                variant="h6"
-                component="div"
-                color="primary"
-                sx={{ flexGrow: 1, fontWeight: 700 }}
-              >
-                simple<span style={{ fontWeight: 400 }}>words</span>
-              </Typography>
-            </Box>
-            <Box display={"flex"} gap={2}>
-              <LoginDialog />
-              <SWButton variant="contained" text="Get Started" action={handleSignup}/>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
+    <div>
+      <Header />
       <Box>
         <Container
           sx={{ display: "flex", alignItems: "center", minHeight: "70vh" }}
@@ -75,6 +45,6 @@ export const Landing = () => {
           </Box>
         </Container>
       </Box>
-    </>
+    </div>
   );
 };

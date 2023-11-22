@@ -1,3 +1,2 @@
-import { passphraseController } from "./passphraseController";
-
-export { passphraseController };
+export { authController } from "./authController";
+export { credentialsController } from "./credentialsController";

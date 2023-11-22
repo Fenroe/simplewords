@@ -1,78 +1,74 @@
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Box,
-  Container,
-  Stepper,
-  Step,
-  StepLabel,
-} from "@mui/material";
-import { useState } from "react";
+import { Header } from "@/modules";
+import { Box, Container } from "@mui/material";
+import { Formik } from "formik";
+import * as yup from "yup";
+import { FormTextField, SWButton } from "@/components";
+import { sendPostRequest } from "@/utilities";
 
-const steps = ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+const signupValidationSchema = yup.object({
+  email: yup
+    .string()
+    .email("Please enter a valid email")
+    .required("This field is required"),
+  password: yup
+    .string()
+    .min(10, "Your password is too short")
+    .required("This field is required"),
+});
 
 export const Signup = () => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set<number>());
-
-  const isStepOptional = (step: number) => {
-    return step === 1;
+  const handleSignup = async (values: { email: string; password: string }) => {
+    try {
+      return await sendPostRequest(values, "http://localhost:8000/api/auth/signup");
+    } catch (err) {
+      console.error(err);
+    }
   };
-
-  const isStepSkipped = (step: number) => {
-    return skipped.has(step);
-  };
-
   return (
-    <>
-      <AppBar
-        position="sticky"
-        sx={{ top: 0, bgcolor: "#fcfcfc" }}
-        elevation={0}
-      >
-        <Container>
-          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-              <Typography
-                variant="h6"
-                component="div"
-                color="primary"
-                sx={{ flexGrow: 1, fontWeight: 700 }}
-              >
-                simple<span style={{ fontWeight: 400 }}>words</span>
-              </Typography>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
+    <div>
+      <Header />
       <Box>
-        <Container
-          sx={{ display: "flex", justifyContent: "center" }} 
-        >
-          <Stepper activeStep={activeStep}>
-            {steps.map((label, index) => {
-              const stepProps: { completed?: boolean } = {};
-              const labelProps: {
-                optional?: React.ReactNode;
-              } = {};
-              if (isStepOptional(index)) {
-                labelProps.optional = (
-                  <Typography variant="caption">Optional</Typography>
-                );
-              }
-              if (isStepSkipped(index)) {
-                stepProps.completed = false;
-              }
-              return (
-                <Step key={label} {...stepProps}>
-                  <StepLabel {...labelProps}>{label}</StepLabel>
-                </Step>
-              );
-            })}
-          </Stepper>
+        <Container sx={{ display: "flex", justifyContent: "center", p: 2 }}>
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            onSubmit={(values) => {
+              alert(JSON.stringify(values, null, 2));
+            }}
+            validationSchema={signupValidationSchema}
+          >
+            {(formik) => (
+              <form
+                onSubmit={formik.handleSubmit}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1rem",
+                }}
+              >
+                <FormTextField
+                  name="email"
+                  type="email"
+                  label="Enter your email address"
+                />
+                <FormTextField
+                  name="password"
+                  type="password"
+                  label="Enter a master password"
+                />
+                <SWButton
+                  type="submit"
+                  text="Sign up"
+                  variant="contained"
+                  fullWidth
+                />
+              </form>
+            )}
+          </Formik>
         </Container>
       </Box>
-    </>
+    </div>
   );
 };

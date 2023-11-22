@@ -1,3 +1,2 @@
-import { openai } from "./openai";
-
-export { openai };
+export { pool } from "./postgres";
+export { passport } from "./passport";

@@ -1,8 +1,10 @@
 import PromiseRouter from "express-promise-router";
-import { passphrasesRouter } from "./passphrases";
+import { authRouter } from "./auth";
+import { credentialsRouter } from "./credentials";
 
 const apiRouter = PromiseRouter();
 
-apiRouter.use("/passphrases", passphrasesRouter);
+apiRouter.use("/auth", authRouter);
+apiRouter.use("/credentials", credentialsRouter);
 
 export { apiRouter };
