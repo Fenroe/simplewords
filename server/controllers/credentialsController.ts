@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ServerError, AppUser } from "../types";
 import { pool } from "../config";
 import { body, validationResult } from "express-validator";
+import { assignErrorProperties } from "../utilities";
 
 // Get credentials fields associated with the user's account
 const getFields = async (req: Request, res: Response, next: NextFunction) => {
@@ -11,7 +12,7 @@ const getFields = async (req: Request, res: Response, next: NextFunction) => {
 
     // Query the database for credentials associated with the user's account
     const credentialsQuery = await pool.query(
-      "SELECT (id, field) FROM credentials WHERE account=$1",
+      "SELECT (id, field, icon) FROM credentials WHERE account=$1",
       [account.id]
     );
 
@@ -24,32 +25,36 @@ const getFields = async (req: Request, res: Response, next: NextFunction) => {
       .send({ success: true, message: "Credentials were found", credentials });
   } catch (err) {
     // Pass any errors to the error handling middleware
-    next(err as ServerError);
+    const completeError = assignErrorProperties(err as ServerError);
+    next(completeError);
   }
 };
 
-// Get password for a specific set of credentials
-const getPassword = async (req: Request, res: Response, next: NextFunction) => {
+// Get secret for a specific set of credentials
+const getSecret = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Extract credentialsId from the request parameters
     const { credentialsId } = req.params;
 
-    // Query the database for the password associated with the specified credentialsId
+    // Query the database for the secret associated with the specified credentialsId
     const passwordQuery = await pool.query(
-      "SELECT password FROM credentials WHERE id=$1",
+      "SELECT secret FROM credentials WHERE id=$1",
       [credentialsId]
     );
 
-    // Extract the password from the query result
-    const { password } = passwordQuery.rows[0];
+    // Extract the secret from the query result
+    const { secret } = passwordQuery.rows[0];
 
-    // Send a successful response with the retrieved password
-    res
-      .status(200)
-      .send({ success: true, message: "Credentials were found", password });
+    // Send a successful response with the retrieved secret
+    res.status(200).send({
+      success: true,
+      message: "Credentials were found",
+      data: { secret },
+    });
   } catch (err) {
     // Pass any errors to the error handling middleware
-    next(err as ServerError);
+    const completeError = assignErrorProperties(err as ServerError);
+    next(completeError);
   }
 };
 
@@ -57,7 +62,7 @@ const getPassword = async (req: Request, res: Response, next: NextFunction) => {
 const postCredentials = [
   // Validate the request body using express-validator
   body("field").notEmpty(),
-  body("password").notEmpty(),
+  body("secret").notEmpty(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Check for validation errors
@@ -67,34 +72,37 @@ const postCredentials = [
         throw new Error("Validation failed") as ServerError;
       }
 
-      // Extract field and password from the request body
-      const { field, password } = req.body;
+      // Extract field and secret from the request body
+      const { field, secret, icon } = req.body;
 
       // Extract user account information from the request
       const account = req.user as AppUser;
 
       // Insert new credentials into the database
-      await pool.query(
-        "INSERT INTO credentials (field, password, account_id) VALUES ($1, $2, $3)",
-        [field, password, account.id]
+      const credentialsQuery = await pool.query(
+        "INSERT INTO credentials (field, secret, account_id, icon) VALUES ($1, $2, $3, $4) RETURNING id, field",
+        [field, secret, account.id, icon]
       );
-
+      const credentials = credentialsQuery.rows[0];
       // Send a successful response
-      res
-        .status(200)
-        .send({ success: true, message: "Credentials were added" });
+      res.status(200).send({
+        success: true,
+        message: "Credentials were added",
+        data: { credentials },
+      });
     } catch (err) {
       // Pass any errors to the error handling middleware
-      next(err as ServerError);
+      const completeError = assignErrorProperties(err as ServerError);
+      next(completeError);
     }
   },
 ];
 
-// Update the password for a specific set of credentials
-const updatePassword = [
+// Update the secret for a specific set of credentials
+const updateSecret = [
   // Validate the request body using express-validator
   body("field").notEmpty(),
-  body("password").notEmpty(),
+  body("secret").notEmpty(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Check for validation errors
@@ -104,23 +112,26 @@ const updatePassword = [
         throw new Error("Validation failed") as ServerError;
       }
 
-      // Extract field, password, and credentialsId from the request
-      const { field, password } = req.body;
+      // Extract field, secret, and credentialsId from the request
+      const { field, secret, icon } = req.body;
       const { credentialsId } = req.params;
 
       // Update the credentials in the database
-      await pool.query(
-        "UPDATE credentials SET field=$1, password=$2 WHERE id=$3",
-        [field, password, credentialsId]
+      const credentialsQuery = await pool.query(
+        "UPDATE credentials SET field=$1, secret=$2, icon=$3 WHERE id=$4 RETURNING id, field, icon",
+        [field, secret, icon, credentialsId]
       );
-
+      const credentials = credentialsQuery.rows[0];
       // Send a successful response
-      res
-        .status(200)
-        .send({ success: true, message: "Credentials were updated" });
+      res.status(200).send({
+        success: true,
+        message: "Credentials were updated",
+        data: { credentials },
+      });
     } catch (err) {
       // Pass any errors to the error handling middleware
-      next(err as ServerError);
+      const completeError = assignErrorProperties(err as ServerError);
+      next(completeError);
     }
   },
 ];
@@ -137,25 +148,28 @@ const deleteCredentials = async (
     const { credentialsId } = req.params;
 
     // Delete credentials from the database
-    await pool.query("DELETE FROM credentials WHERE id=$1 AND account_id=$2", [
-      credentialsId,
-      account.id,
-    ]);
-
+    const credentialsQuery = await pool.query(
+      "DELETE FROM credentials WHERE id=$1 AND account_id=$2 RETURNING id",
+      [credentialsId, account.id]
+    );
+    const credentials = credentialsQuery.rows[0];
     // Send a successful response
-    res
-      .status(200)
-      .send({ success: true, message: "Credentials were deleted" });
+    res.status(200).send({
+      success: true,
+      message: "Credentials were deleted",
+      data: { credentials },
+    });
   } catch (err) {
     // Pass any errors to the error handling middleware
-    next(err as ServerError);
+    const completeError = assignErrorProperties(err as ServerError);
+    next(completeError);
   }
 };
 
 export const credentialsController = {
   getFields,
-  getPassword,
+  getSecret,
   postCredentials,
-  updatePassword,
-  deleteCredentials
-}
+  updateSecret,
+  deleteCredentials,
+};

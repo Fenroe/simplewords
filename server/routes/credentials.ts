@@ -15,7 +15,7 @@ credentialsRouter.get(
 credentialsRouter.get(
   "/:credentialsId",
   authenticateAccessToken,
-  credentialsController.getPassword
+  credentialsController.getSecret
 );
 credentialsRouter.post(
   "/",
@@ -25,7 +25,7 @@ credentialsRouter.post(
 credentialsRouter.put(
   "/:credentialsId",
   authenticateAccessToken,
-  credentialsController.updatePassword
+  credentialsController.updateSecret
 );
 credentialsRouter.delete(
   "/:credentialsId",

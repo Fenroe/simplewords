@@ -1,0 +1,1 @@
+export { wordsMap } from "./wordsMap";

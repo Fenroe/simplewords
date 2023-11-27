@@ -1,4 +1,4 @@
-[
+export const words6 = [
   "search",
   "online",
   "people",
@@ -1486,5 +1486,5 @@
   "scared",
   "asylum",
   "robbie",
-  "poison"
-]
+  "poison",
+];

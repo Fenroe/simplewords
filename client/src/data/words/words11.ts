@@ -1,4 +1,4 @@
-[
+export const words11 = [
   "information",
   "development",
   "description",

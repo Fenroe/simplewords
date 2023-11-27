@@ -3,9 +3,17 @@ import { loginValidationSchema } from "@/data/schemas";
 import { useState } from "react";
 import { useFormik } from "formik";
 import { SWButton } from "@/components";
+import { sendPostRequest } from "@/utilities";
+import { useAppDispatch } from "@/hooks";
+import { setToken, setAccount } from "@/data/store";
+import { useNavigate } from "react-router";
 
 export const LoginDialog = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -13,8 +21,24 @@ export const LoginDialog = () => {
       password: "",
     },
     validationSchema: loginValidationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      try {
+        const data = await sendPostRequest(
+          values,
+          "http://localhost:8000/api/auth/login"
+        );
+        if (data.success === false) {
+          throw new Error(data.message);
+        }
+        const { refreshToken, account } = data.data;
+        dispatch(setToken(refreshToken));
+        dispatch(setAccount(account));
+        localStorage.setItem("refreshToken", refreshToken);
+        navigate("/dashboard");
+      } catch (err) {
+        console.error(err);
+        throw err;
+      }
     },
   });
 
@@ -24,11 +48,7 @@ export const LoginDialog = () => {
   };
   return (
     <>
-      <SWButton
-        text="Log in"
-        action={handleOpenDialog}
-        variant="outlined"
-      />
+      <SWButton text="Log in" action={handleOpenDialog} variant="outlined" />
       <Dialog open={modalIsOpen} onClose={() => setModalIsOpen(false)}>
         <DialogContent>
           <form

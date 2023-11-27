@@ -1,4 +1,4 @@
-[
+export const words5 = [
   "about",
   "other",
   "which",
@@ -945,7 +945,6 @@
   "olive",
   "cyber",
   "clone",
-  "dicks",
   "relay",
   "tears",
   "oasis",
@@ -1365,5 +1364,5 @@
   "ricky",
   "theta",
   "stake",
-  "arbor"
-]
+  "arbor",
+];

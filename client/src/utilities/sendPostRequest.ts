@@ -1,7 +1,22 @@
 interface IValues {
-    email?: string;
-    password?: string;
+  email?: string;
+  password?: string;
 }
+
+interface Data {
+  account?: object;
+  credentials?: object[];
+  credential?: object;
+  accessToken?: string;
+  refreshToken?: string;
+}
+
+interface ResponseData {
+  success: boolean;
+  message: string;
+  data?: Data;
+}
+
 /**Send a POST request to a specified endpoint and return the data in JSON format */
 export const sendPostRequest = async (values: IValues, endpoint: string) => {
   try {

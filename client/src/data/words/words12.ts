@@ -1,4 +1,4 @@
-[
+export const words12 = [
   "professional",
   "applications",
   "requirements",
@@ -206,5 +206,5 @@
   "examinations",
   "departmental",
   "sufficiently",
-  "infringement"
-]
+  "infringement",
+];

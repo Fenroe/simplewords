@@ -33,7 +33,7 @@ const Passphrase = () => {
         const options: PassphraseFormValues = {
           ...values,
         };
-        const passphrase: string = await generatePassphrase(options);
+        const passphrase: string = "";
         setPassphrase(passphrase);
       } catch (err) {
         console.error(err);

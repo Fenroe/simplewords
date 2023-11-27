@@ -3,7 +3,7 @@ import { body, validationResult } from "express-validator";
 import { ServerError, AppUser } from "../types";
 import { pool } from "../config";
 import argon2 from "argon2";
-import { signJwt } from "../utilities";
+import { assignErrorProperties, signJwt } from "../utilities";
 
 const signup = [
   body("email").isEmail(),
@@ -22,7 +22,7 @@ const signup = [
       );
       const emailInUse = emailQuery.rows.length > 0;
       if (emailInUse === true) {
-        throw new Error("Email is already being used") as ServerError;
+        throw new Error("Email in use") as ServerError;
       }
       // Hash password
       const hashedPassword = await argon2.hash(password);
@@ -31,14 +31,27 @@ const signup = [
         "INSERT INTO accounts (email, password) VALUES ($1, $2) RETURNING *",
         [email, hashedPassword]
       );
-      const accountId = newAccountQuery.rows[0].id;
+      const account = newAccountQuery.rows[0];
       // Sign JWT
+      const accountId = account.id;
       const refreshToken = signJwt(accountId, "refresh", 1800);
       const accessToken = signJwt(accountId, "access", 60);
       // Return token
-      res.status(201).send({ accessToken, refreshToken });
+      res.status(201).send({
+        success: true,
+        message: "Signup successful",
+        data: {
+          accessToken,
+          refreshToken,
+          account: {
+            id: account.id,
+            email: account.email,
+          },
+        },
+      });
     } catch (err) {
-      next(err);
+      const completeError = assignErrorProperties(err as ServerError);
+      next(completeError);
     }
   },
 ];
@@ -58,7 +71,7 @@ const login = [
         "SELECT * FROM accounts WHERE email=$1",
         [email]
       );
-      const accountNotFound = accountQuery.rows.length > 0;
+      const accountNotFound = accountQuery.rows.length === 0;
       if (accountNotFound === true) {
         throw new Error("Invalid credentials") as ServerError;
       }
@@ -75,9 +88,21 @@ const login = [
       const refreshToken = signJwt(accountId, "refresh", 1800);
       const accessToken = signJwt(accountId, "access", 60);
       // Return token
-      res.status(201).send({ accessToken, refreshToken });
+      res.status(201).send({
+        success: true,
+        message: "Login successful",
+        data: {
+          accessToken,
+          refreshToken,
+          account: {
+            id: account.id,
+            email: account.email,
+          },
+        },
+      });
     } catch (err) {
-      next(err);
+      const completeError = assignErrorProperties(err as ServerError);
+      next(completeError);
     }
   },
 ];
@@ -100,9 +125,20 @@ const verifyPassword = [
       }
       const accountId = account.id;
       const accessToken = signJwt(accountId, "access", 60);
-      res.status(200).send({ passwordsMatch, accessToken });
+      res.status(200).send({
+        success: true,
+        message: "Password successfully verified",
+        data: {
+          accessToken,
+          account: {
+            id: account.id,
+            email: account.email,
+          },
+        },
+      });
     } catch (err) {
-      next(err);
+      const completeError = assignErrorProperties(err as ServerError);
+      next(completeError);
     }
   },
 ];

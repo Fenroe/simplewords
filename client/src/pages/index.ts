@@ -1,2 +1,11 @@
 export { Landing } from "./Landing";
 export { Signup } from "./Signup";
+export { Dashboard } from "./Dashboard";
+export { Home } from "./Home";
+export { Generator } from "./Generator";
+export { Accounts } from "./Accounts";
+export { Addresses } from "./Addresses";
+export { Contacts } from "./Contacts";
+export { Files } from "./Files";
+export { New } from "./New";
+export { Secrets } from "./Secrets";

@@ -1,4 +1,6 @@
-export const fetchWordList = async (wordLength: number) => {
-  const data = await import(`@data/words/words_${wordLength}.json`);
-  return data.default as string[];
+import { wordsMap } from "@/data/words";
+
+export const fetchWordList = (wordLength: number) => {
+  const wordList = wordsMap.get(wordLength);
+  return wordList as string[];
 };

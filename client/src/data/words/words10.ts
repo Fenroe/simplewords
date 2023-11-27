@@ -1,4 +1,4 @@
-[
+export const words10 = [
   "university",
   "management",
   "technology",
@@ -504,7 +504,6 @@
   "geological",
   "introduces",
   "webmasters",
-  "acdbentity",
   "conspiracy",
   "cumulative",
   "occasional",
@@ -603,5 +602,5 @@
   "challenged",
   "constraint",
   "insulation",
-  "subjective"
-]
+  "subjective",
+];

@@ -1,4 +1,4 @@
-[
+export const words9 = [
   "available",
   "copyright",
   "education",
@@ -899,5 +899,5 @@
   "insertion",
   "swaziland",
   "varieties",
-  "mediawiki"
-]
+  "mediawiki",
+];

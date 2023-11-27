@@ -1,4 +1,4 @@
-[
+export const words8 = [
   "business",
   "services",
   "products",
@@ -1158,5 +1158,5 @@
   "smallest",
   "monsters",
   "lightbox",
-  "cocktail"
-]
+  "cocktail",
+];

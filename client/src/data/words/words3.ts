@@ -1,4 +1,4 @@
-[
+export const words3 = [
   "the",
   "and",
   "for",
@@ -662,5 +662,5 @@
   "ind",
   "qui",
   "mug",
-  "ids"
-]
+  "ids",
+];
