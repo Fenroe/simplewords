@@ -1,3 +1,10 @@
+import { PageWrapper } from "@/components";
+import { EmptySectionContent } from "@/modules";
+
 export const Accounts = () => {
-  return <div>Hello from accounts</div>;
+  return (
+    <PageWrapper>
+      <EmptySectionContent section="accounts" />
+    </PageWrapper>
+  );
 };

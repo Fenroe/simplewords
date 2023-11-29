@@ -1,11 +1,12 @@
+import { PageWrapper } from "@/components";
 import { GetPasswordForm } from "@/modules";
 import { generatePassphrase, generateRandomPassword } from "@/utilities";
 import {
   Box,
   Card,
+  Container,
   FormControl,
   FormControlLabel,
-  Grid,
   Radio,
   RadioGroup,
   Typography,
@@ -16,15 +17,8 @@ export const Generator = () => {
   const [passwordType, setPasswordType] = useState<string>("memorable");
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        p: 2,
-      }}
-    >
-      <Grid item xs={12} md={9} lg={6}>
+    <PageWrapper>
+      <Container maxWidth="sm">
         <Card
           sx={{
             p: 2,
@@ -60,6 +54,7 @@ export const Generator = () => {
           </Box>
           {passwordType === "memorable" && (
             <GetPasswordForm
+              type="memorable"
               getPassword={generatePassphrase}
               lengthMin={3}
               lengthMax={12}
@@ -68,6 +63,7 @@ export const Generator = () => {
           )}
           {passwordType === "random" && (
             <GetPasswordForm
+              type="random"
               getPassword={generateRandomPassword}
               lengthMin={10}
               lengthMax={100}
@@ -75,7 +71,7 @@ export const Generator = () => {
             />
           )}
         </Card>
-      </Grid>
-    </Box>
+      </Container>
+    </PageWrapper>
   );
 };

@@ -9,6 +9,7 @@ import {
   Contacts,
   Secrets,
   Files,
+  New,
 } from "@/pages";
 import { Layout } from "./Layout";
 
@@ -52,6 +53,10 @@ export const router = createBrowserRouter([
       {
         path: "/generator",
         element: <Generator />,
+      },
+      {
+        path: "/new",
+        element: <New />,
       },
     ],
   },

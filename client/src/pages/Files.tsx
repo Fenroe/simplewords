@@ -1,3 +1,10 @@
+import { PageWrapper } from "@/components";
+import { EmptySectionContent } from "@/modules";
+
 export const Files = () => {
-  return <div>Hello from files</div>;
+  return (
+    <PageWrapper>
+      <EmptySectionContent section="files" />
+    </PageWrapper>
+  );
 };

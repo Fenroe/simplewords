@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 
 interface Props {
+  type: "memorable" | "random";
   getPassword: (
     length: number,
     uppercase: boolean,
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export const GetPasswordForm = ({
+  type,
   getPassword,
   lengthMin,
   lengthMax,
@@ -89,7 +91,9 @@ export const GetPasswordForm = ({
               fullWidth
               size="small"
               value={passphrase}
-              inputProps={{ style: { textAlign: "center" } }}
+              inputProps={{
+                style: { textAlign: "center" },
+              }}
               sx={{
                 bgcolor: "#fff5fa",
                 borderRadius: 10,
@@ -176,7 +180,7 @@ export const GetPasswordForm = ({
                 mt: 2,
               }}
             >
-              Create Passphrase
+              {type === "memorable" ? "New Passphrase" : "New Password"}
             </Button>
           </ButtonGroup>
         </form>

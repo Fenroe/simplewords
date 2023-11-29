@@ -91,18 +91,7 @@ export const Layout = () => {
                       <ListItemText>Accounts</ListItemText>
                     </ListItemButton>
                   </ListItem>
-                  <ListItem sx={{ color: "#fffaf5" }} disableGutters>
-                    <ListItemButton
-                      disableRipple
-                      disableTouchRipple
-                      onClick={() => navigate("/secrets")}
-                    >
-                      <ListItemIcon>
-                        <HomeOutlinedIcon sx={{ color: "#fffaf5" }} />
-                      </ListItemIcon>
-                      <ListItemText>Secrets</ListItemText>
-                    </ListItemButton>
-                  </ListItem>
+
                   <ListItem sx={{ color: "#fffaf5" }} disableGutters>
                     <ListItemButton
                       disableRipple
